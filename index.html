@@ -17,22 +17,46 @@
       <div class="product-display">
         <div class="product-container">
           <div class="product-image">
-          <a :href="url"><img :src="image"></a>  
+          <a :href="url">
+            <img
+             :src="image"
+             class="out-of-stock-img"
+             :class="[inStock ? out-of-stock-img: '']">
+          </a>  
           </div>
           <div class="product-info">
+
             <h1>{{ product }}</h1>
+
             <p v-if="inventory > 10">In Stock</p>
             <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out</p>
             <p v-else>Out of Stock</p>
             <p v-if="onSale"> ON SALE!!</p>
+
             <ul>
               <li v-for="detail in details">{{detail}}</li>
             </ul>
-            <div v-for="variant in variants"
-             :key="variant.id">
-             {{ variant.color}}, {{variant.size }}
+
+            <div 
+              v-for="variant in variants"
+             :key="variant.id"
+              @mouseover="updateImage(variant.image)"
+              class="color-circle"
+              :style="{backgroundColor: variant.color}">
             </div>
-            <button class="button" v-on:click="cart +=1">Add to Cart</button>
+
+            <div 
+              v-for="variant in variants"
+             :key="variant.id">
+             {{variant.size }}
+            </div>
+
+            <button
+              class="button"
+              :disabled="!inStock && inventory == 0"
+              :class="{disabledButton: !inStock && inventory == 0 }"
+              @click="addToCart">Add to Cart</button>
+            <button class="button" @click="removeFromCart">Remove item</button>
           </div>
         </div>
       </div>
